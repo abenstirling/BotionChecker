@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
               } else if (typeof error.status === 'number' && error.status >= 400) {
                   statusText = `${error.status} Error`;
               }
-              li.innerHTML = `<strong>${error.url}</strong> (Status: ${statusText})<br>Found on: ${error.foundOn || 'Unknown page'}`;
+              li.innerHTML = `<strong>${error.url}</strong> (Status: ${statusText})<br>Found on: ${error.foundOn}`;
               li.classList.add('error');
               ul.appendChild(li);
           });
