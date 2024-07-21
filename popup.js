@@ -47,9 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
       a.textContent = `${link.url} (Status: ${link.status})`;
       a.target = '_blank';
       li.appendChild(a);
-      if (link.status === 404 || link.status === 'Error') {
+      if (link.status === 404 || link.status === 'Error' || (typeof link.status === 'number' && link.status >= 400)) {
         li.style.color = 'red';
-      } else if (link.status === 200) {
+      } else if (link.status === 200 || link.status === 'Exists (Cross-origin)') {
         li.style.color = 'green';
       }
       container.appendChild(li);
@@ -104,7 +104,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const ul = document.createElement('ul');
       errors.forEach(error => {
         const li = document.createElement('li');
-        li.textContent = `${error.url} (Status: ${error.status})`;
+        let statusText = error.status;
+        if (error.status === 404) {
+          statusText = "404 Not Found";
+        } else if (error.status === 'Error') {
+          statusText = "Network Error";
+        } else if (typeof error.status === 'number' && error.status >= 400) {
+          statusText = `${error.status} Error`;
+        }
+        li.textContent = `${error.url} (Status: ${statusText})`;
         li.style.color = 'red';
         ul.appendChild(li);
       });
