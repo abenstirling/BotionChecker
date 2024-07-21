@@ -3,17 +3,25 @@
 <head>
   <title>Site Link Extractor</title>
   <style>
-    body { width: 300px; font-family: Arial, sans-serif; }
-    #linkList { max-height: 300px; overflow-y: auto; }
+    body { width: 400px; font-family: Arial, sans-serif; }
+    #linkList, #internalLinkList { max-height: 200px; overflow-y: auto; }
     .loading { display: none; }
+    #progressBar { width: 100%; display: none; }
+    #report { margin-top: 20px; }
   </style>
 </head>
 <body>
   <h1>Site Link Extractor</h1>
-  <button id="getContentButton">Get Page Content and Links</button>
+  <button id="getContentButton">Refresh Page Content and Links</button>
+  <button id="automateButton">Automate Crawl</button>
   <div id="status"></div>
+  <progress id="progressBar" value="0" max="100"></progress>
   <div id="loading" class="loading">Checking links... Please wait.</div>
+  <h2>All Links</h2>
   <ul id="linkList"></ul>
+  <h2>Internal Links (Click to navigate)</h2>
+  <ul id="internalLinkList"></ul>
+  <div id="report"></div>
   <script src="popup.js"></script>
 </body>
 </html>
