@@ -9,7 +9,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.error(chrome.runtime.lastError);
             sendResponse({error: chrome.runtime.lastError.message});
           } else if (results && results[0]) {
-            sendResponse(results[0].result);
+            checkLinks(results[0].result.links).then(checkedLinks => {
+              results[0].result.checkedLinks = checkedLinks;
+              sendResponse(results[0].result);
+            });
           } else {
             sendResponse({error: "No results"});
           }
@@ -28,4 +31,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       content: document.documentElement.outerHTML,
       links: links
     };
+  }
+  
+  async function checkLinks(links) {
+    const checkedLinks = await Promise.all(links.map(async (link) => {
+      try {
+        const response = await fetch(link, { method: 'HEAD' });
+        return { url: link, status: response.status };
+      } catch (error) {
+        return { url: link, status: 'Error' };
+      }
+    }));
+    return checkedLinks;
   }

@@ -3,16 +3,16 @@
 <head>
   <title>Site Link Extractor</title>
   <style>
-    body { width: 400px; font-family: Arial, sans-serif; }
-    ul { list-style-type: none; padding: 0; max-height: 300px; overflow-y: auto; }
-    li { margin-bottom: 5px; }
-    #status { color: blue; margin: 10px 0; white-space: pre-line; }
+    body { width: 300px; font-family: Arial, sans-serif; }
+    #linkList { max-height: 300px; overflow-y: auto; }
+    .loading { display: none; }
   </style>
 </head>
 <body>
   <h1>Site Link Extractor</h1>
   <button id="getContentButton">Get Page Content and Links</button>
   <div id="status"></div>
+  <div id="loading" class="loading">Checking links... Please wait.</div>
   <ul id="linkList"></ul>
   <script src="popup.js"></script>
 </body>

@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Site Link Crawler",
-  "version": "1.0",
-  "description": "Crawls a site and finds all links within the domain",
+  "name": "Site Link Crawler with 404 Check",
+  "version": "1.1",
+  "description": "Crawls a site, finds all links within the domain, and checks for 404 errors",
   "permissions": [
     "activeTab",
     "scripting"
   ],
   "host_permissions": [
-    "https://*/*"
+    "https://*/*",
+    "http://*/*"
   ],
   "action": {
     "default_popup": "popup.html"

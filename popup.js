@@ -9,20 +9,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   getContentButton.addEventListener('click', function() {
-    updateStatus("Fetching page content...");
+    updateStatus("Fetching page content and checking links...");
     chrome.runtime.sendMessage({action: "getPageContent"}, function(response) {
       if (response.error) {
         updateStatus(`Error: ${response.error}`, true);
       } else {
         updateStatus(`Page URL: ${response.url}\nContent length: ${response.content.length}\nLinks found: ${response.links.length}`);
         linkList.innerHTML = '';
-        response.links.forEach(function(link) {
+        response.checkedLinks.forEach(function(link) {
           const li = document.createElement('li');
           const a = document.createElement('a');
-          a.href = link;
-          a.textContent = link;
+          a.href = link.url;
+          a.textContent = `${link.url} (Status: ${link.status})`;
           a.target = '_blank';
           li.appendChild(a);
+          if (link.status === 404) {
+            li.style.color = 'red';
+          } else if (link.status === 200) {
+            li.style.color = 'green';
+          }
           linkList.appendChild(li);
         });
       }
