@@ -40,22 +40,35 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function displayLinks(links, container) {
-      container.innerHTML = '';
-      links.forEach(function(link) {
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = link.url;
-          a.textContent = `${link.url} (Status: ${link.status})`;
-          a.target = '_blank';
-          li.appendChild(a);
-          if (link.status === 404 || link.status === 'Error' || (typeof link.status === 'number' && link.status >= 400)) {
-              li.classList.add('error');
-          } else if (link.status === 200 || link.status === 'Exists (Cross-origin)') {
-              li.classList.add('success');
-          }
-          container.appendChild(li);
-      });
-  }
+    container.innerHTML = '';
+    links.forEach(function(link) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.textContent = `${link.url} (Status: ${link.status})`;
+        a.target = '_blank';
+        
+        const circle = document.createElement('span');
+        circle.classList.add('status-circle');
+        
+        if (link.status === 404 || link.status === 'Error' || (typeof link.status === 'number' && link.status >= 400)) {
+            li.classList.add('error');
+            circle.classList.add('error-circle');
+        } else if (link.status === 200) {
+            li.classList.add('success');
+            circle.classList.add('success-circle');
+        } else if (link.status === 'Exists (Cross-origin)') {
+            li.classList.add('neutral');
+            circle.classList.add('cross-origin-circle');
+        } else if (link.status === 'mailto') {
+            li.classList.add('neutral');
+        }
+        
+        li.appendChild(circle);
+        li.appendChild(a);
+        container.appendChild(li);
+    });
+}
 
   function displayInternalLinks(links, container) {
       container.innerHTML = '';
@@ -96,36 +109,49 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function displayReport(errors) {
-      progressBar.style.width = '100%';
-      setTimeout(() => {
-          progressContainer.style.display = 'none';
-          reportDiv.style.display = 'block';
-      }, 500);
-      updateStatus("Crawl complete!");
-      reportDiv.innerHTML = `<h3>Crawl Report</h3>`;
-      if (errors.length === 0) {
-          reportDiv.innerHTML += `<p class="success">No errors found.</p>`;
-      } else {
-          reportDiv.innerHTML += `<p class="error">Found ${errors.length} errors:</p>`;
-          const ul = document.createElement('ul');
-          errors.forEach(error => {
-              const li = document.createElement('li');
-              let statusText = error.status;
-              if (error.status === 404) {
-                  statusText = "404 Not Found";
-              } else if (error.status === 'Error') {
-                  statusText = "Network Error";
-              } else if (typeof error.status === 'number' && error.status >= 400) {
-                  statusText = `${error.status} Error`;
-              }
-              li.innerHTML = `<strong>${error.url}</strong> (Status: ${statusText})<br>Found on: ${error.foundOn}`;
-              li.classList.add('error');
-              ul.appendChild(li);
-          });
-          reportDiv.appendChild(ul);
-      }
-  }
-
+    progressBar.style.width = '100%';
+    setTimeout(() => {
+        progressContainer.style.display = 'none';
+        reportDiv.style.display = 'block';
+    }, 500);
+    updateStatus("Crawl complete!");
+    reportDiv.innerHTML = `<h3>Crawl Report</h3>`;
+    if (errors.length === 0) {
+        reportDiv.innerHTML += `<p class="success">No errors found.</p>`;
+    } else {
+        reportDiv.innerHTML += `<p class="error">Found ${errors.length} errors:</p>`;
+        const ul = document.createElement('ul');
+        errors.forEach(error => {
+            const li = document.createElement('li');
+            let statusText = error.status;
+            let statusClass = '';
+            
+            if (error.status === 404) {
+                statusText = "404 Not Found";
+                statusClass = 'error-circle';
+            } else if (error.status === 'Error') {
+                statusText = "Network Error";
+                statusClass = 'error-circle';
+            } else if (typeof error.status === 'number' && error.status >= 400) {
+                statusText = `${error.status} Error`;
+                statusClass = 'error-circle';
+            }
+            
+            li.innerHTML = `
+                <div class="error-item">
+                    <span class="status-circle ${statusClass}"></span>
+                    <div class="error-details">
+                        <a href="${error.url}" target="_blank" class="error-url">${error.url}</a>
+                        <span class="error-status">(Status: ${statusText})</span>
+                        <span class="error-source">Found on: <a href="${error.foundOn}" target="_blank">${error.foundOn}</a></span>
+                    </div>
+                </div>
+            `;
+            ul.appendChild(li);
+        });
+        reportDiv.appendChild(ul);
+    }
+}
   getContentButton.addEventListener('click', checkLinksOnPage);
   automateButton.addEventListener('click', startAutomatedCrawl);
 

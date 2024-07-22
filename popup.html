@@ -3,101 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Link Extractor</title>
+    <title>Link Checker</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            background-color: #191919;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 20px;
-            width: 400px;
-        }
-        h1, h2 {
-            color: #ffffff;
-        }
-        button {
-            background-color: #2eaadc;
-            color: #ffffff;
-            border: none;
-            padding: 10px 15px;
-            margin: 5px 0;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        button:hover {
-            background-color: #2180a6;
-            transform: translateY(-2px);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-        }
-        #status, #report {
-            background-color: #252525;
-            border-radius: 4px;
-            padding: 10px;
-            margin-top: 10px;
-        }
-        .progress-container {
-            background-color: #252525;
-            border-radius: 4px;
-            height: 20px;
-            margin-top: 10px;
-            overflow: hidden;
-            display: none;
-        }
-        #progressBar {
-            width: 0;
-            height: 100%;
-            background: linear-gradient(to right, #4ecdc4, #2eaadc, #ff6b6b);
-            transition: width 0.3s;
-        }
-        #report {
-            display: none;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 5px 0;
-            transition: background-color 0.3s;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        li:hover {
-            background-color: #2a2a2a;
-        }
-        a {
-            color: #2eaadc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #ff6b6b;
-        }
-        .success {
-            color: #4ecdc4;
-        }
-        .github-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .github-logo {
-            width: 24px;
-            height: 24px;
-            vertical-align: middle;
-        }
-    </style>
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+          background-color: #191919;
+          color: #e0e0e0;
+          margin: 0;
+          padding: 20px;
+          width: 400px;
+          scrollbar-width: thin;
+          scrollbar-color: #2eaadc #191919;
+      }
+
+      body {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(46, 170, 220, 0.5) transparent;
+    }
+
+    /* Webkit browsers like Chrome, Safari */
+    body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    body::-webkit-scrollbar-thumb {
+        background-color: rgba(46, 170, 220, 0.5);
+        border-radius: 4px;
+    }
+
+    body::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(46, 170, 220, 0.8);
+    }
+
+    /* Ensure the body has a fixed height to enable scrolling */
+    body {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    /* Styles for the report section scrollbar */
+    #report {
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    #report::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #report::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #report::-webkit-scrollbar-thumb {
+        background-color: rgba(46, 170, 220, 0.5);
+        border-radius: 4px;
+    }
+
+    #report::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(46, 170, 220, 0.8);
+    }
+      h1, h2 {
+          color: #ffffff;
+      }
+      button {
+          background-color: #2eaadc;
+          color: #ffffff;
+          border: none;
+          padding: 10px 15px;
+          margin: 5px 0;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background-color 0.3s, transform 0.1s;
+      }
+      button:hover {
+          background-color: #2180a6;
+          transform: translateY(-2px);
+      }
+      button:active {
+          transform: translateY(0);
+      }
+      button:disabled {
+          background-color: #555;
+          cursor: not-allowed;
+      }
+      #status, #report {
+          background-color: #252525;
+          border-radius: 4px;
+          padding: 10px;
+          margin-top: 10px;
+      }
+      .progress-container {
+          background-color: #252525;
+          border-radius: 4px;
+          height: 20px;
+          margin-top: 10px;
+          overflow: hidden;
+          display: none;
+      }
+      #progressBar {
+          width: 0;
+          height: 100%;
+          background: linear-gradient(to right, #4ecdc4, #2eaadc, #ff6b6b);
+          transition: width 0.3s;
+      }
+      #report {
+          display: none;
+      }
+      ul {
+          list-style-type: none;
+          padding: 0;
+      }
+      li {
+          margin: 5px 0;
+          transition: background-color 0.3s;
+          padding: 5px;
+          border-radius: 4px;
+      }
+      li:hover {
+          background-color: #2a2a2a;
+      }
+      a {
+          color: #2eaadc;
+          text-decoration: none;
+      }
+      a:hover {
+          text-decoration: underline;
+      }
+      .error {
+          color: #ff6b6b;
+      }
+      .success {
+          color: #4ecdc4;
+      }
+      .github-link {
+          display: block;
+          text-align: center;
+          margin-top: 20px;
+      }
+      .github-logo {
+          width: 24px;
+          height: 24px;
+          vertical-align: middle;
+      }
+      
+      /* New and updated styles */
+      .status-circle {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 5px;
+      }
+      .success-circle {
+          background-color: #98FB98; /* Minty green */
+      }
+      .error-circle {
+          background-color: #FF0000; /* Red */
+      }
+      .cross-origin-circle {
+          background-color: #E6E6FA; /* Light purple */
+      }
+      #linkList li, #report ul li {
+          margin-bottom: 15px; /* Increased margin */
+          display: flex;
+          align-items: flex-start; /* Align items to the top */
+      }
+      #report ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    #report ul li {
+        margin-bottom: 15px;
+    }
+
+    .error-item {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .status-circle {
+        flex-shrink: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
+
+    .error-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .error-url {
+        color: #4a90e2;
+        text-decoration: none;
+        word-break: break-all;
+        margin-bottom: 2px;
+    }
+
+    .error-status {
+        color: #ff6b6b;
+        font-size: 0.9em;
+        margin-bottom: 2px;
+    }
+
+    .error-source {
+        font-size: 0.9em;
+    }
+
+    .error-source a {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .error-url:hover, .error-source a:hover {
+        text-decoration: underline;
+    }
+
+    .error-circle {
+        background-color: #FF0000; /* Red */
+    }
+  </style>
 </head>
 <body>
     <h1>Site Link Extractor</h1>
