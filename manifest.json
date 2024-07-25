@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Site Link Crawler with 404 Check",
-  "version": "1.1",
-  "description": "Crawls a site, finds all links within the domain, and checks for 404 errors",
+  "name": "Botion Checker",
+  "version": "1.0",
+  "description": "Find all the broken links on your site!",
   "permissions": [
     "activeTab",
     "scripting"
@@ -16,5 +16,8 @@
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "100": "images/icon-100x100.png"
   }
 }
